@@ -4,17 +4,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.robovm</groupId>
-    <artifactId>robovm-maven-parent</artifactId>
-    <version>1.14.1-SNAPSHOT</version>
+    <groupId>com.bugvm</groupId>
+    <artifactId>bugvm-maven-parent</artifactId>
+    <version>1.0.10-SNAPSHOT</version>
   </parent>
 
-  <artifactId>robovm-surefire-provider</artifactId>
+  <artifactId>bugvm-surefire-provider</artifactId>
   <packaging>jar</packaging>
 
   <properties>
     <surefire.version>2.17</surefire.version>
-    <robovm.version>${project.version}</robovm.version>
   </properties>
 
   <dependencies>
@@ -46,20 +45,20 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-dist-compiler</artifactId>
-      <version>${robovm.version}</version>
+      <groupId>com.bugvm</groupId>
+      <artifactId>bugvm-dist-compiler</artifactId>
+      <version>${bugvm.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-maven-resolver</artifactId>
-      <version>${robovm.version}</version>
+      <groupId>com.bugvm</groupId>
+      <artifactId>bugvm-maven-resolver</artifactId>
+      <version>${project.version}</version>
       <classifier>nodep</classifier>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-junit-client</artifactId>
-      <version>${robovm.version}</version>
+      <groupId>com.bugvm</groupId>
+      <artifactId>bugvm-junit-client</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 

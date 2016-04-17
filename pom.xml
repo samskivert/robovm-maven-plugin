@@ -11,30 +11,31 @@
   </parent>
 
   <properties>
-    <robovm.version>${project.version}</robovm.version>
+    <!--<bugvm.version>${project.version}</bugvm.version>-->
+    <bugvm.version>1.0.9</bugvm.version>
   </properties>
 
-  <groupId>org.robovm</groupId>
-  <artifactId>robovm-maven-parent</artifactId>
-  <version>1.14.1-SNAPSHOT</version>
-  <name>RoboVM Maven</name>
+  <groupId>com.bugvm</groupId>
+  <artifactId>bugvm-maven-parent</artifactId>
+  <version>1.0.10-SNAPSHOT</version>
+  <name>BugVM Maven</name>
   <packaging>pom</packaging>
 
-  <url>https://github.com/robovm/robovm-maven-plugin</url>
+  <url>https://github.com/bugvm/bugvm-maven-plugin</url>
   <description>
-    Maven support for RoboVM
+    Maven support for BugVM
   </description>
-  <inceptionYear>2013</inceptionYear>
+  <inceptionYear>2015</inceptionYear>
 
   <organization>
-    <name>RoboVM AB</name>
-    <url>http://www.robovm.com</url>
+    <name>BugVM AB</name>
+    <url>http://www.bugvm.com</url>
   </organization>
 
   <mailingLists>
     <mailingList>
-      <name>RoboVM Discussion</name>
-      <archive>https://groups.google.com/forum/#!forum/robovm</archive>
+      <name>BugVM Discussion</name>
+      <archive>https://groups.google.com/forum/#!forum/bugvm</archive>
     </mailingList>
   </mailingLists>
 
@@ -66,14 +67,14 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git://github.com/robovm/robovm-maven-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:robovm/robovm-maven-plugin.git</developerConnection>
-    <url>https://github.com/robovm/robovm-maven-plugin.git</url>
+    <connection>scm:git:git://github.com/bugvm/bugvm-maven-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:bugvm/bugvm-maven-plugin.git</developerConnection>
+    <url>https://github.com/bugvm/bugvm-maven-plugin.git</url>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/robovm/robovm-maven-plugin/issues</url>
+    <url>https://github.com/bugvm/bugvm-maven-plugin/issues</url>
   </issueManagement>
 
   <build>
@@ -134,9 +135,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.robovm</groupId>
-        <artifactId>robovm-dist-compiler</artifactId>
-        <version>${robovm.version}</version>
+        <groupId>com.bugvm</groupId>
+        <artifactId>bugvm-dist-compiler</artifactId>
+        <version>${bugvm.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

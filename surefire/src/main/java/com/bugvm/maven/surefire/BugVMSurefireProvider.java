@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 RoboVM AB
+ * Copyright (C) 2014 BugVM AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.maven.surefire;
+package com.bugvm.maven.surefire;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,36 +53,36 @@ import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.robovm.compiler.AppCompiler;
-import org.robovm.compiler.Version;
-import org.robovm.compiler.config.Arch;
-import org.robovm.compiler.config.Config;
-import org.robovm.compiler.config.Config.Home;
-import org.robovm.compiler.config.OS;
-import org.robovm.compiler.log.Logger;
-import org.robovm.compiler.target.LaunchParameters;
-import org.robovm.compiler.target.ios.DeviceType;
-import org.robovm.compiler.target.ios.ProvisioningProfile;
-import org.robovm.compiler.target.ios.SigningIdentity;
-import org.robovm.compiler.target.ios.SimulatorLaunchParameters;
-import org.robovm.junit.client.TestClient;
-import org.robovm.maven.resolver.RoboVMResolver;
+import com.bugvm.compiler.AppCompiler;
+import com.bugvm.compiler.Version;
+import com.bugvm.compiler.config.Arch;
+import com.bugvm.compiler.config.Config;
+import com.bugvm.compiler.config.Config.Home;
+import com.bugvm.compiler.config.OS;
+import com.bugvm.compiler.log.Logger;
+import com.bugvm.compiler.target.LaunchParameters;
+import com.bugvm.compiler.target.ios.DeviceType;
+import com.bugvm.compiler.target.ios.ProvisioningProfile;
+import com.bugvm.compiler.target.ios.SigningIdentity;
+import com.bugvm.compiler.target.ios.IOSSimulatorLaunchParameters;
+import com.bugvm.junit.client.TestClient;
+import com.bugvm.maven.resolver.BugVMResolver;
 
-public class RoboVMSurefireProvider extends AbstractProvider {
-    private final static String PROP_LOG_DEBUG = "robovm.test.enableDebugLogging";
-    private final static String PROP_SERVER_DEBUG = "robovm.test.enableServerLogging";
-    private final static String PROP_OS = "robovm.test.os";
-    private final static String PROP_ARCH = "robovm.test.arch";
-    private final static String PROP_CONFIG_FILE = "robovm.test.configFile";
-    private final static String PROP_PROPERTIES_FILE = "robovm.test.propertiesFile";
-    private final static String PROP_IOS_SIGNING_IDENTITY = "robovm.test.iosSignIdentity";
-    private final static String PROP_IOS_PROVISIONING_PROFILE = "robovm.test.iosProvisioningProfile";
-    private final static String PROP_IOS_SKIP_SIGNING = "robovm.test.iosSkipSigning";
-    private final static String PROP_IOS_SIMULATOR_NAME = "robovm.test.device.name";
-    private final static String PROP_CACHE_DIR = "robovm.test.cacheDir";
-    private final static String PROP_KEYCHAIN_PASSWORD = "robovm.test.keychainPassword";
-    private final static String PROP_KEYCHAIN_PASSWORD_FILE = "robovm.test.keychainPasswordFile";
-    private final static String PROP_RUN_ARGS = "robovm.test.runArgs";
+public class BugVMSurefireProvider extends AbstractProvider {
+    private final static String PROP_LOG_DEBUG = "bugvm.test.enableDebugLogging";
+    private final static String PROP_SERVER_DEBUG = "bugvm.test.enableServerLogging";
+    private final static String PROP_OS = "bugvm.test.os";
+    private final static String PROP_ARCH = "bugvm.test.arch";
+    private final static String PROP_CONFIG_FILE = "bugvm.test.configFile";
+    private final static String PROP_PROPERTIES_FILE = "bugvm.test.propertiesFile";
+    private final static String PROP_IOS_SIGNING_IDENTITY = "bugvm.test.iosSignIdentity";
+    private final static String PROP_IOS_PROVISIONING_PROFILE = "bugvm.test.iosProvisioningProfile";
+    private final static String PROP_IOS_SKIP_SIGNING = "bugvm.test.iosSkipSigning";
+    private final static String PROP_IOS_SIMULATOR_NAME = "bugvm.test.device.name";
+    private final static String PROP_CACHE_DIR = "bugvm.test.cacheDir";
+    private final static String PROP_KEYCHAIN_PASSWORD = "bugvm.test.keychainPassword";
+    private final static String PROP_KEYCHAIN_PASSWORD_FILE = "bugvm.test.keychainPasswordFile";
+    private final static String PROP_RUN_ARGS = "bugvm.test.runArgs";
 
     private final ClassLoader testClassLoader;
     private final List<org.junit.runner.notification.RunListener> customRunListeners;
@@ -93,7 +93,7 @@ public class RoboVMSurefireProvider extends AbstractProvider {
     private final ScanResult scanResult;
     private TestsToRun testsToRun;
 
-    public RoboVMSurefireProvider(ProviderParameters booterParameters) {
+    public BugVMSurefireProvider(ProviderParameters booterParameters) {
         providerParameters = booterParameters;
         testClassLoader = booterParameters.getTestClassLoader();
         scanResult = booterParameters.getScanResult();
@@ -166,29 +166,29 @@ public class RoboVMSurefireProvider extends AbstractProvider {
                             Arrays.asList(
                                     CommandLine.parse("cmd " + runArgs).getArguments())));
         }
-        
+
         Process process = null;
         try {
             Config config = testClient.configure(createConfig(), isIOS()).build();
-            config.getLogger().info("Building RoboVM tests for: %s (%s)", config.getOs(), config.getArch());
+            config.getLogger().info("Building BugVM tests for: %s (%s)", config.getOs(), config.getArch());
             config.getLogger().info("This could take a while, especially the first time round");
             AppCompiler appCompiler = new AppCompiler(config);
             appCompiler.build();
-            
+
             LaunchParameters launchParameters = config.getTarget().createLaunchParameters();
             if (Boolean.getBoolean(PROP_SERVER_DEBUG)) {
-                launchParameters.getArguments().add("-rvm:Drobovm.debug=true");
+                launchParameters.getArguments().add("-rvm:Dbugvm.debug=true");
             }
-            if (System.getProperty(PROP_IOS_SIMULATOR_NAME) != null && launchParameters instanceof SimulatorLaunchParameters) {
+            if (System.getProperty(PROP_IOS_SIMULATOR_NAME) != null && launchParameters instanceof IOSSimulatorLaunchParameters) {
                 DeviceType type = DeviceType.getDeviceType(System.getProperty(PROP_IOS_SIMULATOR_NAME));
-                ((SimulatorLaunchParameters)launchParameters).setDeviceType(type);
-            } else if(launchParameters instanceof SimulatorLaunchParameters) {
+                ((IOSSimulatorLaunchParameters)launchParameters).setDeviceType(type);
+            } else if(launchParameters instanceof IOSSimulatorLaunchParameters) {
                 if(config.getArch() == Arch.x86_64) {
-                    ((SimulatorLaunchParameters)launchParameters).setDeviceType(DeviceType.getBestDeviceType(config.getArch(), config.getOs(), null, null, null));
+                    ((IOSSimulatorLaunchParameters)launchParameters).setDeviceType(DeviceType.getBestDeviceType(config.getArch(), null, null, null));
                 }
             }
             process = appCompiler.launchAsync(launchParameters);
-            
+
             runNotifier.fireTestRunStarted(null);
             for (Class<?> clazz : testsToRun) {
                 executeTestSet(testClient, clazz, reporter, runNotifier);
@@ -198,7 +198,7 @@ public class RoboVMSurefireProvider extends AbstractProvider {
             runNotifier.fireTestRunFinished(result);
             JUnit4RunListener.rethrowAnyTestMechanismFailures(result);
         } catch (Throwable t) {
-            throw new RuntimeException("RoboVM test run failed", t);
+            throw new RuntimeException("BugVM test run failed", t);
         } finally {
             if (process != null) {
                 process.destroy();
@@ -273,9 +273,9 @@ public class RoboVMSurefireProvider extends AbstractProvider {
             }
         };
         configBuilder.logger(logger);
-        
-        RoboVMResolver roboVMResolver = new RoboVMResolver();
-        roboVMResolver.setLogger(new org.robovm.maven.resolver.Logger() {
+
+        BugVMResolver roboVMResolver = new BugVMResolver();
+        roboVMResolver.setLogger(new com.bugvm.maven.resolver.Logger() {
             public void info(String logLine) {
                 logger.info(logLine);
             }
@@ -289,11 +289,11 @@ public class RoboVMSurefireProvider extends AbstractProvider {
             home = Home.find();
         } catch (Throwable t) {}
         if (home == null || !home.isDev()) {
-            home = new Home(roboVMResolver.resolveAndUnpackRoboVMDistArtifact(Version.getVersion()));
+            home = new Home(roboVMResolver.resolveAndUnpackBugVMDistArtifact(Version.getVersion()));
         }
         configBuilder.home(home);
         if (home.isDev()) {
-            configBuilder.useDebugLibs(Boolean.getBoolean("robovm.useDebugLibs"));
+            configBuilder.useDebugLibs(Boolean.getBoolean("bugvm.useDebugLibs"));
             configBuilder.dumpIntermediates(true);
         }
 
@@ -304,7 +304,7 @@ public class RoboVMSurefireProvider extends AbstractProvider {
                 throw new FileNotFoundException("Failed to find specified "
                         + PROP_PROPERTIES_FILE + ": " + propertiesFile.getAbsolutePath());
             }
-            logger.debug("Loading RoboVM config properties from " 
+            logger.debug("Loading BugVM config properties from "
                     + propertiesFile.getAbsolutePath());
             configBuilder.addProperties(propertiesFile);
         } else {
@@ -317,12 +317,12 @@ public class RoboVMSurefireProvider extends AbstractProvider {
                 throw new FileNotFoundException("Failed to find specified "
                         + PROP_CONFIG_FILE + ": " + configFile.getAbsolutePath());
             }
-            logger.debug("Loading RoboVM config from " + configFile.getAbsolutePath());
+            logger.debug("Loading BugVM config from " + configFile.getAbsolutePath());
             configBuilder.read(configFile);
         } else {
             configBuilder.readProjectConfig(basedir, true);
         }
-        
+
         if (System.getProperty(PROP_OS) != null) {
             configBuilder.os(OS.valueOf(System.getProperty(PROP_OS)));
         }
@@ -345,27 +345,27 @@ public class RoboVMSurefireProvider extends AbstractProvider {
                         ProvisioningProfile.list(), iosProvisioningProfile));
             }
 
-            if (System.getProperty(PROP_KEYCHAIN_PASSWORD) != null) {
-                configBuilder.keychainPassword(System.getProperty(PROP_KEYCHAIN_PASSWORD));
-            } else if (System.getProperty(PROP_KEYCHAIN_PASSWORD_FILE) != null) {
-                configBuilder.keychainPasswordFile(new File(System.getProperty(PROP_KEYCHAIN_PASSWORD_FILE)));
-            }
+            // if (System.getProperty(PROP_KEYCHAIN_PASSWORD) != null) {
+            //     configBuilder.keychainPassword(System.getProperty(PROP_KEYCHAIN_PASSWORD));
+            // } else if (System.getProperty(PROP_KEYCHAIN_PASSWORD_FILE) != null) {
+            //     configBuilder.keychainPasswordFile(new File(System.getProperty(PROP_KEYCHAIN_PASSWORD_FILE)));
+            // }
         }
-        
+
         if (System.getProperty(PROP_CACHE_DIR) != null) {
             File cacheDir = new File(System.getProperty(PROP_CACHE_DIR));
             logger.debug("Using explicit cache dir: " + cacheDir);
             configBuilder.cacheDir(cacheDir);
         }
 
-        // Ignore any classpath entries in the loaded robovm.xml file.
+        // Ignore any classpath entries in the loaded bugvm.xml file.
         configBuilder.clearClasspathEntries();
-        
-        configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("org.robovm:robovm-junit-server:" + Version.getVersion()).asFile());
+
+        configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("com.bugvm:bugvm-junit-server:" + Version.getVersion()).asFile());
         if(isIOS()) {
-            configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("org.robovm:robovm-rt:" + Version.getVersion()).asFile());
-            configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("org.robovm:robovm-objc:" + Version.getVersion()).asFile());
-            configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("org.robovm:robovm-cocoatouch:" + Version.getVersion()).asFile());
+            configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("com.bugvm:bugvm-rt:" + Version.getVersion()).asFile());
+            configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("com.bugvm:bugvm-objc:" + Version.getVersion()).asFile());
+            configBuilder.addClasspathEntry(roboVMResolver.resolveArtifact("com.bugvm:bugvm-cocoatouch:" + Version.getVersion()).asFile());
         }
         for (String p : System.getProperty("java.class.path").split(File.pathSeparator)) {
             configBuilder.addClasspathEntry(new File(p));
@@ -398,7 +398,7 @@ public class RoboVMSurefireProvider extends AbstractProvider {
                 configBuilder.addClasspathEntry(new File(path));
             }
         }
-        
+
         for (Class<?> c : testsToRun.getLocatedClasses()) {
             configBuilder.addForceLinkClass(c.getName());
         }
@@ -406,7 +406,7 @@ public class RoboVMSurefireProvider extends AbstractProvider {
 
         return configBuilder;
     }
-    
+
     private RunNotifier getRunNotifier(org.junit.runner.notification.RunListener main, Result result,
             List<org.junit.runner.notification.RunListener> others) {
 
@@ -418,11 +418,11 @@ public class RoboVMSurefireProvider extends AbstractProvider {
         }
         return notifier;
     }
-    
+
     /**
-     * RoboVM note: Copied from JUnit4Provider and cleaned up.
-     * 
-     * This method retrieves test methods from String like 
+     * BugVM note: Copied from JUnit4Provider and cleaned up.
+     *
+     * This method retrieves test methods from String like
      * "com.xx.ImmutablePairTest#testBasic,com.xx.StopWatchTest#testLang315+testStopWatchSimpleGet"
      * <br>
      * and we need to think about cases that 2 or more method in 1 class. we should choose the correct method

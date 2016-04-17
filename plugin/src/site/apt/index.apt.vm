@@ -6,7 +6,7 @@
  2014-11-11
  ------
 
- ~~ Copyright (C) 2013 RoboVM AB.
+ ~~ Copyright (C) 2013 BugVM AB.
  ~~
  ~~ Licensed under the Apache License, Version 2.0 (the "License");
  ~~ you may not use this file except in compliance with the License.
@@ -25,39 +25,39 @@
 
 ${project.name}
 
-  This plugin provides the ability to build and deploy RoboVM apps to the iOS simulator and devices,
+  This plugin provides the ability to build and deploy BugVM apps to the iOS simulator and devices,
   as well as to generate IPA files.
 
 * Goals Overview
 
-  * {{{./ipad-sim-mojo.html}robovm:ipad-sim}} compile and run your app in the iPad simulator.
+  * {{{./ipad-sim-mojo.html}bugvm:ipad-sim}} compile and run your app in the iPad simulator.
 
-  * {{{./iphone-sim-mojo.html}robovm:iphone-sim}} compile and run your app in the iPhone simulator.
+  * {{{./iphone-sim-mojo.html}bugvm:iphone-sim}} compile and run your app in the iPhone simulator.
 
-  * {{{./ios-device-mojo.html}robovm:ios-device}} compile and run your app on a connected iOS device.
+  * {{{./ios-device-mojo.html}bugvm:ios-device}} compile and run your app on a connected iOS device.
 
-  * {{{./tvos-sim-mojo.html}robovm:tvos-sim}}  compile and run your app in the AppleTV simulator.
+  * {{{./tvos-sim-mojo.html}bugvm:tvos-sim}}  compile and run your app in the AppleTV simulator.
 
-  * {{{./tvos-device-mojo.html}robovm:tvos-device}} compile and run your app on a connected AppleTV device.
+  * {{{./tvos-device-mojo.html}bugvm:tvos-device}} compile and run your app on a connected AppleTV device.
 
-  * {{{./console-mojo.html}robovm:console}} compile and launch a console app on the console.
+  * {{{./console-mojo.html}bugvm:console}} compile and launch a console app on the console.
 
-  * {{{./archive-mojo.html}robovm:archive}} compile and bundle your app into an IPA file.
+  * {{{./archive-mojo.html}bugvm:archive}} compile and bundle your app into an IPA file.
 
-  * {{{./create-ipa-mojo.html}robovm:create-ipa}} compile and bundle your app into an IPA file (alias for the <<archive>> task).
+  * {{{./create-ipa-mojo.html}bugvm:create-ipa}} compile and bundle your app into an IPA file (alias for the <<archive>> task).
 
-  * {{{./install-mojo.html}robovm:install}} compile an app or binary and install it to <<target/robovm>> or the specified install dir.
+  * {{{./install-mojo.html}bugvm:install}} compile an app or binary and install it to <<target/bugvm>> or the specified install dir.
 
-  * {{{./activate-license-mojo.html}robovm:activate-license}} activate your license.
+  * {{{./activate-license-mojo.html}bugvm:activate-license}} activate your license.
 
-  * {{{./deactivate-license-mojo.html}robovm:deactivate-license}} deactivate your license.
+  * {{{./deactivate-license-mojo.html}bugvm:deactivate-license}} deactivate your license.
 
   []
 
 * Usage
 
   Integrating the plugin mainly consists of adding it to your <<<pom.xml>>> file along with
-  dependencies on the main RoboVM jars:
+  dependencies on the main BugVM jars:
 
 +-----------------+
 <project>
@@ -65,13 +65,13 @@ ${project.name}
   <dependencies>
     ...
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-rt</artifactId>
+      <groupId>com.bugvm</groupId>
+      <artifactId>bugvm-rt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-cocoatouch</artifactId>
+      <groupId>com.bugvm</groupId>
+      <artifactId>bugvm-cocoatouch</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -79,8 +79,8 @@ ${project.name}
   <build>
     <plugins>
       <plugin>
-        <groupId>org.robovm</groupId>
-        <artifactId>robovm-maven-plugin</artifactId>
+        <groupId>com.bugvm</groupId>
+        <artifactId>bugvm-maven-plugin</artifactId>
         <version>${project.version}</version>
       </plugin>
       ...
@@ -90,12 +90,12 @@ ${project.name}
 +-----------------+
 
   Then invoke one of the above targets from the command line. For example:
-  <<<mvn robovm:ipad-sim>>>
+  <<<mvn bugvm:ipad-sim>>>
 
-  See the many {{{https://github.com/robovm/robovm-samples}RoboVM samples}} for examples of the
-  RoboVM Maven plugin in working projects.
+  See the many {{{https://github.com/bugvm/bugvm-samples}BugVM samples}} for examples of the
+  BugVM Maven plugin in working projects.
 
   In case you still have questions regarding the plugin's usage, feel free to contact the
-  {{{https://groups.google.com/group/robovm}user mailing list}}. The posts to the mailing
+  {{{https://groups.google.com/group/bugvm}user mailing list}}. The posts to the mailing
   list are archived and could already contain the answer to your question as part of an older
   thread. Hence, it is also worth browsing/searching the mail archive.

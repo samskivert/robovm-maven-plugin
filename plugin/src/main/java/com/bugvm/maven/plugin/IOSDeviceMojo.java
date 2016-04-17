@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 RoboVM AB.
+ * Copyright (C) 2013 BugVM AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.maven.plugin;
+package com.bugvm.maven.plugin;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.robovm.compiler.AppCompiler;
-import org.robovm.compiler.config.Arch;
-import org.robovm.compiler.config.Config;
-import org.robovm.compiler.config.OS;
-import org.robovm.compiler.target.LaunchParameters;
-import org.robovm.compiler.target.ios.IOSTarget;
+import com.bugvm.compiler.AppCompiler;
+import com.bugvm.compiler.config.Arch;
+import com.bugvm.compiler.config.Config;
+import com.bugvm.compiler.config.OS;
+import com.bugvm.compiler.target.LaunchParameters;
+import com.bugvm.compiler.target.ios.IOSTarget;
 
 /**
  * Compiles your application and deploys it to a connected iOS device.
  */
 @Mojo(name="ios-device", defaultPhase=LifecyclePhase.PACKAGE,
       requiresDependencyResolution=ResolutionScope.COMPILE_PLUS_RUNTIME)
-public class IOSDeviceMojo extends AbstractRoboVMMojo {
+public class IOSDeviceMojo extends AbstractBugVMMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

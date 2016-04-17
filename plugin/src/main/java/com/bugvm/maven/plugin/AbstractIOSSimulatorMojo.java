@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 RoboVM AB.
+ * Copyright (C) 2013 BugVM AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.maven.plugin;
+package com.bugvm.maven.plugin;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.robovm.compiler.AppCompiler;
-import org.robovm.compiler.config.Arch;
-import org.robovm.compiler.config.Config;
-import org.robovm.compiler.config.OS;
-import org.robovm.compiler.target.ios.DeviceType;
-import org.robovm.compiler.target.ios.DeviceType.DeviceFamily;
-import org.robovm.compiler.target.ios.SimulatorLaunchParameters;
-import org.robovm.compiler.target.ios.IOSTarget;
+import com.bugvm.compiler.AppCompiler;
+import com.bugvm.compiler.config.Arch;
+import com.bugvm.compiler.config.Config;
+import com.bugvm.compiler.config.OS;
+import com.bugvm.compiler.target.ios.DeviceType;
+import com.bugvm.compiler.target.ios.DeviceType.DeviceFamily;
+import com.bugvm.compiler.target.ios.IOSSimulatorLaunchParameters;
+import com.bugvm.compiler.target.ios.IOSTarget;
 
-public abstract class AbstractIOSSimulatorMojo extends AbstractRoboVMMojo {
+public abstract class AbstractIOSSimulatorMojo extends AbstractBugVMMojo {
 
     private DeviceFamily deviceFamily;
 
@@ -35,14 +35,14 @@ public abstract class AbstractIOSSimulatorMojo extends AbstractRoboVMMojo {
      * The iOS SDK version to use when choosing the simulator (e.g. "8.0"). Defaults to the newest
      * SDK version.
      */
-    @Parameter(property="robovm.iosSimSdk")
+    @Parameter(property="bugvm.iosSimSdk")
     protected String sdk;
 
     /**
      * The identifier of the simulator device to use (e.g. "iPhone-5s", "iPad-Retina"). Run {@code
      * ios-sim showdevicetypes} for a full list.
      */
-    @Parameter(property="robovm.iosDeviceName")
+    @Parameter(property="bugvm.iosDeviceName")
     protected String deviceName;
 
     protected AbstractIOSSimulatorMojo(DeviceFamily deviceFamily) {
@@ -55,15 +55,15 @@ public abstract class AbstractIOSSimulatorMojo extends AbstractRoboVMMojo {
             if (super.arch != null && super.arch.equals(Arch.x86.toString())) {
                 arch = Arch.x86;
             }
-            
+
             AppCompiler compiler = build(OS.ios, arch, IOSTarget.TYPE);
             Config config = compiler.getConfig();
-            SimulatorLaunchParameters launchParameters = (SimulatorLaunchParameters)
+            IOSSimulatorLaunchParameters launchParameters = (IOSSimulatorLaunchParameters)
                 config.getTarget().createLaunchParameters();
 
             // select the device based on the (optional) SDK version and (optional) device type
             DeviceType deviceType = DeviceType.getBestDeviceType(
-                    arch, OS.ios, deviceFamily, deviceName, sdk);
+                    arch, deviceFamily, deviceName, sdk);
             launchParameters.setDeviceType(deviceType);
             compiler.launch(launchParameters);
 

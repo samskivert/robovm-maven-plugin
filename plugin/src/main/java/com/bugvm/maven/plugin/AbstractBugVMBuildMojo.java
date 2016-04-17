@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 RoboVM AB.
+ * Copyright (C) 2015 BugVM AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.maven.plugin;
+package com.bugvm.maven.plugin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,27 +22,27 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.robovm.compiler.AppCompiler;
-import org.robovm.compiler.config.Arch;
-import org.robovm.compiler.config.Config;
+import com.bugvm.compiler.AppCompiler;
+import com.bugvm.compiler.config.Arch;
+import com.bugvm.compiler.config.Config;
 
 /**
  * Abstract mojo which either archives or installs.
  */
-public abstract class AbstractRoboVMBuildMojo extends AbstractRoboVMMojo {
+public abstract class AbstractBugVMBuildMojo extends AbstractBugVMMojo {
 
     /**
      * Colon separated list of architectures to include in the archive.
      */
-    @Parameter(property="robovm.archs")
+    @Parameter(property="bugvm.archs")
     protected String archs;
 
-    /**
-     * If set to {@code true} bitcode will be generated in the linked binary.
-     * The default is {@code false}.
-     */
-    @Parameter(property="robovm.enableBitcode")
-    protected boolean enableBitcode = false;
+    // /**
+    //  * If set to {@code true} bitcode will be generated in the linked binary.
+    //  * The default is {@code false}.
+    //  */
+    // @Parameter(property="bugvm.enableBitcode")
+    // protected boolean enableBitcode = false;
 
     protected String getArchs() {
         return archs;
@@ -57,7 +57,7 @@ public abstract class AbstractRoboVMBuildMojo extends AbstractRoboVMMojo {
 
             Config.Builder builder = configure(new Config.Builder())
                     .skipInstall(false);
-            
+
             if (getArchs() != null) {
                 List<Arch> archs = new ArrayList<>();
                 for (String s : getArchs().trim().split(":")) {
@@ -65,8 +65,8 @@ public abstract class AbstractRoboVMBuildMojo extends AbstractRoboVMMojo {
                 }
                 builder.archs(archs);
             }
-            builder.enableBitcode(enableBitcode);
-            
+            // builder.enableBitcode(enableBitcode);
+
             AppCompiler compiler = new AppCompiler(builder.build());
             compiler.build();
             if (shouldArchive()) {

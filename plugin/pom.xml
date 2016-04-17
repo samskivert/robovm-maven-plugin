@@ -5,25 +5,21 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.robovm</groupId>
-    <artifactId>robovm-maven-parent</artifactId>
-    <version>1.14.1-SNAPSHOT</version>
+    <groupId>com.bugvm</groupId>
+    <artifactId>bugvm-maven-parent</artifactId>
+    <version>1.0.10-SNAPSHOT</version>
   </parent>
 
-  <artifactId>robovm-maven-plugin</artifactId>
+  <artifactId>bugvm-maven-plugin</artifactId>
 
   <packaging>maven-plugin</packaging>
 
-  <name>RoboVM Maven Plugin</name>
-  <url>https://github.com/robovm/robovm-maven-plugin</url>
+  <name>BugVM Maven Plugin</name>
+  <url>https://github.com/bugvm/bugvm-maven-plugin</url>
   <description>
-    The RoboVM Maven Plugin provides a way to build RoboVM based distribution bundles.
+    The BugVM Maven Plugin provides a way to build BugVM based distribution bundles.
   </description>
-  <inceptionYear>2013</inceptionYear>
-
-  <properties>
-    <robovm.version>${project.version}</robovm.version>
-  </properties>
+  <inceptionYear>2015</inceptionYear>
 
   <repositories>
     <repository>
@@ -35,8 +31,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.robovm</groupId>
-      <artifactId>robovm-dist-compiler</artifactId>
+      <groupId>com.bugvm</groupId>
+      <artifactId>bugvm-dist-compiler</artifactId>
     </dependency>
 
     <dependency>
@@ -79,7 +75,7 @@
         <version>3.2</version>
         <configuration>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-          <goalPrefix>robovm</goalPrefix>
+          <goalPrefix>bugvm</goalPrefix>
           <extractors>
             <extractor>java-annotations</extractor>
           </extractors>

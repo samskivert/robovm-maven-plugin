@@ -1,4 +1,4 @@
-robovm-maven-plugin
+bugvm-maven-plugin
 ===================
 
-RoboVM Maven plugin
+BugVM Maven plugin

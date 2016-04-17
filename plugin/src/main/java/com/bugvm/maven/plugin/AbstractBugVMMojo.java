@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 RoboVM AB.
+ * Copyright (C) 2013 BugVM AB.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.maven.plugin;
+package com.bugvm.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,19 +44,19 @@ import org.codehaus.plexus.util.xml.PrettyPrintXMLWriter;
 import org.codehaus.plexus.util.xml.XMLWriter;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomWriter;
-import org.robovm.compiler.AppCompiler;
-import org.robovm.compiler.Version;
-import org.robovm.compiler.config.Arch;
-import org.robovm.compiler.config.Config;
-import org.robovm.compiler.config.Config.Home;
-import org.robovm.compiler.config.OS;
-import org.robovm.compiler.log.Logger;
-import org.robovm.compiler.target.ios.ProvisioningProfile;
-import org.robovm.compiler.target.ios.SigningIdentity;
+import com.bugvm.compiler.AppCompiler;
+import com.bugvm.compiler.Version;
+import com.bugvm.compiler.config.Arch;
+import com.bugvm.compiler.config.Config;
+import com.bugvm.compiler.config.Config.Home;
+import com.bugvm.compiler.config.OS;
+import com.bugvm.compiler.log.Logger;
+import com.bugvm.compiler.target.ios.ProvisioningProfile;
+import com.bugvm.compiler.target.ios.SigningIdentity;
 
 /**
  */
-public abstract class AbstractRoboVMMojo extends AbstractMojo {
+public abstract class AbstractBugVMMojo extends AbstractMojo {
 
     @Component
     protected MavenProject project;
@@ -71,9 +71,9 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
     private ArtifactRepository localRepository;
 
     /**
-     * Base directory to extract RoboVM native distribution files into. The
-     * robovm-dist bundle will be downloaded from Maven and extracted into this
-     * directory. Note that each release of RoboVM is placed in a separate
+     * Base directory to extract BugVM native distribution files into. The
+     * bugvm-dist bundle will be downloaded from Maven and extracted into this
+     * directory. Note that each release of BugVM is placed in a separate
      * sub-directory with the version number as suffix.
      *
      * If not set, then the tar file is extracted into the local Maven
@@ -83,15 +83,15 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
     protected File home;
 
     /**
-     * The path to a {@code robovm.properties} file which contains info for your app.
+     * The path to a {@code bugvm.properties} file which contains info for your app.
      */
-    @Parameter(property="robovm.propertiesFile")
+    @Parameter(property="bugvm.propertiesFile")
     protected File propertiesFile;
 
     /**
-     * The path to a {@code robovm.xml} file which configures the RoboVM compiler.
+     * The path to a {@code bugvm.xml} file which configures the BugVM compiler.
      */
-    @Parameter(property="robovm.configFile")
+    @Parameter(property="bugvm.configFile")
     protected File configFile;
 
     /**
@@ -100,64 +100,64 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
      * Developer' or 'iOS Development'. Enclose in '/' to search by regexp, e.g.
      * '/foo|bar/'.
      */
-    @Parameter(property="robovm.signIdentity", alias="robovm.iosSignIdentity")
+    @Parameter(property="bugvm.signIdentity", alias="bugvm.iosSignIdentity")
     protected String signIdentity;
 
     /**
      * The provisioning profile to use when building for device.
      */
-    @Parameter(property="robovm.provisioningProfile", alias="robovm.iosProvisioningProfile")
+    @Parameter(property="bugvm.provisioningProfile", alias="bugvm.iosProvisioningProfile")
     protected String provisioningProfile;
 
     /**
      * Whether the app should be signed or not. Unsigned apps can only be run on jailbroken
      * devices.
      */
-    @Parameter(property="robovm.skipSigning", alias="robovm.iosSkipSigning")
+    @Parameter(property="bugvm.skipSigning", alias="bugvm.iosSkipSigning")
     protected boolean skipSigning = false;
 
-    /**
-     * Keychain password to use when unlocking the codesign keychain. May be
-     * needed during headless build. The compiler will also look for a
-     * KEYCHAIN_PASSWORD env variable if this property hasn't been specified.
-     */
-    @Parameter(property="robovm.keychainPassword")
-    protected String keychainPassword;
+    // /**
+    //  * Keychain password to use when unlocking the codesign keychain. May be
+    //  * needed during headless build. The compiler will also look for a
+    //  * KEYCHAIN_PASSWORD env variable if this property hasn't been specified.
+    //  */
+    // @Parameter(property="bugvm.keychainPassword")
+    // protected String keychainPassword;
+
+    // /**
+    //  * Read the keychain password to use when unlocking the codesign keychain
+    //  * from the specified file. May be needed during headless build. The
+    //  * compiler will also look for a KEYCHAIN_PASSWORD env variable if this
+    //  * property hasn't been specified.
+    //  */
+    // @Parameter(property="bugvm.keychainPasswordFile")
+    // protected File keychainPasswordFile;
 
     /**
-     * Read the keychain password to use when unlocking the codesign keychain
-     * from the specified file. May be needed during headless build. The
-     * compiler will also look for a KEYCHAIN_PASSWORD env variable if this
-     * property hasn't been specified.
+     * The directory into which the BugVM distributable for the project will be built.
      */
-    @Parameter(property="robovm.keychainPasswordFile")
-    protected File keychainPasswordFile;
-
-    /**
-     * The directory into which the RoboVM distributable for the project will be built.
-     */
-    @Parameter(property="robovm.installDir", defaultValue="${project.build.directory}/robovm")
+    @Parameter(property="bugvm.installDir", defaultValue="${project.build.directory}/bugvm")
     protected File installDir;
 
     /**
      * The directory where cached compiled class files will be placed. Default
-     * is ~/.robovm/cache.
+     * is ~/.bugvm/cache.
      */
-    @Parameter(property="robovm.cacheDir")
+    @Parameter(property="bugvm.cacheDir")
     protected File cacheDir;
 
     /**
      * Overrides the arch used when running the app. One of x86, x86_64, thumbv7, arm64.
      * Will be ignored if the specified value isn't supported by the executed goal.
      */
-    @Parameter(property="robovm.arch")
+    @Parameter(property="bugvm.arch")
     protected String arch;
 
     /**
      * Overrides the os used when running the app. One of macosx, linux, ios, tvos.
      * Will be ignored if the specified value isn't supported by the executed goal.
      */
-    @Parameter(property="robovm.os")
+    @Parameter(property="bugvm.os")
     protected String os;
 
     /**
@@ -165,24 +165,24 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
      * will suspend before the main method is called and will wait for a
      * debugger to connect. If set to {@code "clientmode"} then the application
      * will connect back to the local host to attach to already started
-     * debugging server which is waiting for connection on <code>robovm.debugPort</code>.
+     * debugging server which is waiting for connection on <code>bugvm.debugPort</code>.
      */
-    @Parameter(property="robovm.debug")
+    @Parameter(property="bugvm.debug")
     protected String debug;
 
     /**
      * The port to listen for debugger connections on when launching in debug
      * mode using {@code debug=true}. If not set a default port will be used.
      * The port actually used will be written to the console before the app is
-     * launched. 
+     * launched.
      */
-    @Parameter(property="robovm.debugPort")
+    @Parameter(property="bugvm.debugPort")
     protected int debugPort = -1;
 
     private Logger roboVMLogger;
 
     protected Config.Builder configure(Config.Builder builder) throws MojoExecutionException {
-        builder.logger(getRoboVMLogger());
+        builder.logger(getBugVMLogger());
 
         // load config base file if it exists (and properties)
 
@@ -193,17 +193,17 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
         if (propertiesFile != null) {
             if (!propertiesFile.exists()) {
                 throw new MojoExecutionException(
-                        "Invalid 'propertiesFile' specified for RoboVM compile: "
+                        "Invalid 'propertiesFile' specified for BugVM compile: "
                                 + propertiesFile);
             }
             try {
                 getLog().debug(
-                        "Including properties file in RoboVM compiler config: "
+                        "Including properties file in BugVM compiler config: "
                                 + propertiesFile.getAbsolutePath());
                 builder.addProperties(propertiesFile);
             } catch (IOException e) {
                 throw new MojoExecutionException(
-                        "Failed to add properties file to RoboVM config: "
+                        "Failed to add properties file to BugVM config: "
                                 + propertiesFile);
             }
         } else {
@@ -211,7 +211,7 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
                 builder.readProjectProperties(project.getBasedir(), false);
             } catch (IOException e) {
                 throw new MojoExecutionException(
-                        "Failed to read RoboVM project properties file(s) in "
+                        "Failed to read BugVM project properties file(s) in "
                                 + project.getBasedir().getAbsolutePath(), e);
             }
         }
@@ -219,37 +219,37 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
         if (configFile != null) {
             if (!configFile.exists()) {
                 throw new MojoExecutionException(
-                        "Invalid 'configFile' specified for RoboVM compile: "
+                        "Invalid 'configFile' specified for BugVM compile: "
                                 + configFile);
             }
             try {
                 getLog().debug(
-                        "Loading config file for RoboVM compiler: "
+                        "Loading config file for BugVM compiler: "
                                 + configFile.getAbsolutePath());
                 builder.read(configFile);
             } catch (Exception e) {
                 throw new MojoExecutionException(
-                        "Failed to read RoboVM config file: " + configFile);
+                        "Failed to read BugVM config file: " + configFile);
             }
         } else {
             try {
                 builder.readProjectConfig(project.getBasedir(), false);
             } catch (Exception e) {
                 throw new MojoExecutionException(
-                        "Failed to read project RoboVM config file in "
+                        "Failed to read project BugVM config file in "
                                 + project.getBasedir().getAbsolutePath(), e);
             }
         }
 
-        // Read embedded RoboVM <config> if there is one
-        Plugin plugin = project.getPlugin("org.robovm:robovm-maven-plugin");
+        // Read embedded BugVM <config> if there is one
+        Plugin plugin = project.getPlugin("com.bugvm:bugvm-maven-plugin");
         MavenProject p = project;
         while (p != null && plugin == null) {
-            plugin = p.getPluginManagement().getPluginsAsMap().get("org.robovm:robovm-maven-plugin");
+            plugin = p.getPluginManagement().getPluginsAsMap().get("com.bugvm:bugvm-maven-plugin");
             if (plugin == null) p = p.getParent();
         }
         if (plugin != null) {
-            getLog().debug("Reading RoboVM plugin configuration from " + p.getFile().getAbsolutePath());
+            getLog().debug("Reading BugVM plugin configuration from " + p.getFile().getAbsolutePath());
             Xpp3Dom configDom = (Xpp3Dom) plugin.getConfiguration();
             if (configDom != null && configDom.getChild("config") != null) {
                 StringWriter sw = new StringWriter();
@@ -260,12 +260,12 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
                             project.getBasedir());
                 } catch (Exception e) {
                     throw new MojoExecutionException(
-                            "Failed to read RoboVM config embedded in POM", e);
+                            "Failed to read BugVM config embedded in POM", e);
                 }
             }
         }
 
-        File tmpDir = new File(project.getBuild().getDirectory(), "robovm.tmp");
+        File tmpDir = new File(project.getBuild().getDirectory(), "bugvm.tmp");
         try {
             FileUtils.deleteDirectory(tmpDir);
         } catch (IOException e) {
@@ -279,14 +279,14 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
             home = Home.find();
         } catch (Throwable t) {}
         if (home == null || !home.isDev()) {
-            home = new Config.Home(unpackRoboVMDist());
+            home = new Config.Home(unpackBugVMDist());
         }
         builder.home(home)
                 .tmpDir(tmpDir)
                 .skipInstall(true)
                 .installDir(installDir);
         if (home.isDev()) {
-            builder.useDebugLibs(Boolean.getBoolean("robovm.useDebugLibs"));
+            builder.useDebugLibs(Boolean.getBoolean("bugvm.useDebugLibs"));
             builder.dumpIntermediates(true);
         }
 
@@ -299,7 +299,7 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
                 builder.addPluginArgument("debug:clientmode=true");
             }
         }
-        
+
         if (skipSigning) {
             builder.iosSkipSigning(true);
         } else {
@@ -318,11 +318,11 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
                         ProvisioningProfile.list(), provisioningProfile));
             }
 
-            if (keychainPassword != null) {
-                builder.keychainPassword(keychainPassword);
-            } else if (keychainPasswordFile != null) {
-                builder.keychainPasswordFile(keychainPasswordFile);
-            }
+            // if (keychainPassword != null) {
+            //     builder.keychainPassword(keychainPassword);
+            // } else if (keychainPasswordFile != null) {
+            //     builder.keychainPasswordFile(keychainPasswordFile);
+            // }
         }
 
         if (cacheDir != null) {
@@ -338,23 +338,23 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
                 String path = (String) object;
                 if (getLog().isDebugEnabled()) {
                     getLog().debug(
-                            "Including classpath element for RoboVM app: "
+                            "Including classpath element for BugVM app: "
                                     + path);
                 }
                 builder.addClasspathEntry(new File(path));
             }
         } catch (DependencyResolutionRequiredException e) {
             throw new MojoExecutionException(
-                    "Error resolving application classpath for RoboVM build", e);
+                    "Error resolving application classpath for BugVM build", e);
         }
-        
+
         return builder;
     }
 
     protected AppCompiler build(OS os, Arch arch, String targetType)
             throws MojoExecutionException, MojoFailureException {
 
-        getLog().info("Building RoboVM app for: " + os + " (" + arch + ")");
+        getLog().info("Building BugVM app for: " + os + " (" + arch + ")");
 
         Config.Builder builder;
         try {
@@ -364,13 +364,13 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
         }
 
         configure(builder).os(os).arch(arch).targetType(targetType);
-        
-        // execute the RoboVM build
+
+        // execute the BugVM build
 
         try {
 
             getLog().info(
-                    "Compiling RoboVM app, this could take a while, especially the first time round");
+                    "Compiling BugVM app, this could take a while, especially the first time round");
             AppCompiler compiler = new AppCompiler(builder.build());
             compiler.build();
 
@@ -378,17 +378,17 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
 
         } catch (IOException e) {
             throw new MojoExecutionException(
-                    "Error building RoboVM executable for app", e);
+                    "Error building BugVM executable for app", e);
         }
     }
 
-    protected String getRoboVMVersion() {
+    protected String getBugVMVersion() {
         return Version.getVersion();
     }
 
-    protected File unpackRoboVMDist() throws MojoExecutionException {
+    protected File unpackBugVMDist() throws MojoExecutionException {
 
-        Artifact distTarArtifact = resolveRoboVMDistArtifact();
+        Artifact distTarArtifact = resolveBugVMDistArtifact();
         File distTarFile = distTarArtifact.getFile();
         File unpackBaseDir;
         if (home != null) {
@@ -407,15 +407,15 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
             }
         }
         unpack(distTarFile, unpackBaseDir);
-        File unpackedDir = new File(unpackBaseDir, "robovm-" + getRoboVMVersion());
+        File unpackedDir = new File(unpackBaseDir, "bugvm-" + getBugVMVersion());
         return unpackedDir;
     }
 
-    protected Artifact resolveRoboVMDistArtifact() throws MojoExecutionException {
+    protected Artifact resolveBugVMDistArtifact() throws MojoExecutionException {
 
         MavenArtifactHandler handler = new MavenArtifactHandler("tar.gz");
-        Artifact artifact = new DefaultArtifact("org.robovm", "robovm-dist",
-                getRoboVMVersion(), "", "tar.gz", "nocompiler", handler);
+        Artifact artifact = new DefaultArtifact("com.bugvm", "bugvm-dist",
+                getBugVMVersion(), "", "tar.gz", null, handler);
         return resolveArtifact(artifact);
     }
 
@@ -475,7 +475,7 @@ public abstract class AbstractRoboVMMojo extends AbstractMojo {
         }
     }
 
-    protected Logger getRoboVMLogger() {
+    protected Logger getBugVMLogger() {
 
         if (roboVMLogger == null) {
             roboVMLogger = new Logger() {
